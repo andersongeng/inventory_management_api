@@ -20,21 +20,21 @@ This API is a control environment that helps you to have a complete vision about
 inventory_management_api/
 ├──apps/
 │   ├──inventory/
+│   │  ├──migrations/
+│   │  ├──models.py
+│   │  ├──tests.py
+│   │  └──views.py
+│   └──user
 │      ├──migrations/
 │      ├──models.py
 │      ├──tests.py
-│      ├──views.py
-│   ├──user
-│      ├──migrations/
-│      ├──models.py
-│      ├──tests.py
-│      ├──views.py
+│      └─views.py
 ├──logs
 ├──settings
 │   ├──base.py
 │   ├──dev.py
 │   ├──prod.py
-│   ├──test.py
+│   └──test.py
 asgi.py
 urls.py
 wsgi.py
