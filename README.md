@@ -16,7 +16,7 @@ This API is a control environment that helps you to have a complete vision about
 
 ## Project Structure
 
-´´´
+```text
 inventory_management_api/
 ├──apps/
 │   ├──inventory/
@@ -43,7 +43,7 @@ docker-compose.yaml
 manage.py
 README.md
 requirements.txt
-´´´
+```
 
 ## Tech Stack
 
