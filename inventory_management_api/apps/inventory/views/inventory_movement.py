@@ -12,4 +12,15 @@ class InventoryMovementViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Aquí asignamos al usuario logueado al campo que definiste en tu modelo
         # Si en tu modelo el campo se llama 'user', usa user=self.request.user
-        serializer.save(user=self.request.user)
+        movement = serializer.save(user=self.request.user)
+        product = movement.product
+        quantity = movement.quantity
+
+        # 2. Lógica de suma o resta
+        if movement.type == 'IN':
+            product.stock += quantity
+        elif movement.type == 'OUT':
+            product.stock -= quantity
+        
+        # 3. Guardamos el producto con el nuevo stock
+        product.save()
