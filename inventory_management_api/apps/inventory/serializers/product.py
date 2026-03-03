@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from inventory.models import Product, Category
+from inventory.models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
     # Campos adicionales para mejorar la lectura (Read Only)
