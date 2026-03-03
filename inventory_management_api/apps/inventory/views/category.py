@@ -6,3 +6,5 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
     ViewSet to list, retrieve, create, update, partial_update and destroy categories
     """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
