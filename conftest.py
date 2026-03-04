@@ -8,3 +8,8 @@ User = get_user_model()
 def api_client():
     """Proporciona un cliente de DRF para hacer peticiones a la API"""
     return APIClient()
+
+@pytest.fixture
+def create_test_user(db):
+    """Fixture para crear un usuario base rápido"""
+    return User.objects.create_user(username="validuser", password="correct_password123")
