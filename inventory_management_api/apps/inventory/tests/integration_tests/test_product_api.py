@@ -9,7 +9,6 @@ def test_create_product_api(auth_client, create_test_user):
         "name": "Sierra Circular",
         "sku": "SIE001",
         "price": "45.50",
-        "stock": 20
     }
 
     # 2. Act: Send POST request
@@ -32,7 +31,7 @@ def test_create_duplicate_sku(auth_client):
     Product.objects.create(name="Original", sku="UNIQ123", price=10, stock=5)
     
     # Try create a second one with the same sku
-    payload = {"name": "Copia", "sku": "UNIQ123", "price": 5, "stock": 1}
+    payload = {"name": "Copia", "sku": "UNIQ123", "price": 5}
     response = auth_client.post('/api/products/', payload)
     
     assert response.status_code == 400
