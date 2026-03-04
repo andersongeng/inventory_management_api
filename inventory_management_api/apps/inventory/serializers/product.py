@@ -22,6 +22,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
     # Validación personalizada para el SKU
     def validate_sku(self, value):
+        if not value:
+            return value
+        
         if not value.isalnum():
             raise serializers.ValidationError("El SKU solo debe contener letras y números.")
         return value.upper()
