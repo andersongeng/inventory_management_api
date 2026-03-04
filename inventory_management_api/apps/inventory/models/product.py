@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from .category import Category
+from django.core.validators import MinValueValidator
+from decimal import Decimal
+
 
 class Product(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -12,7 +15,7 @@ class Product(models.Model):
         null=True,
         related_name='products'
     )
-    price = models.DecimalField(max_digits=16, decimal_places=2)
+    price = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     stock = models.PositiveIntegerField(db_default=0)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
