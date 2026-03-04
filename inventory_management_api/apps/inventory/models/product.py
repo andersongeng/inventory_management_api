@@ -4,7 +4,7 @@ from .category import Category
 
 class Product(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    sku = models.CharField(max_length=50, unique=True)
+    sku = models.CharField(max_length=50, unique=True, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(
         Category,
