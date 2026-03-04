@@ -28,3 +28,8 @@ class ProductSerializer(serializers.ModelSerializer):
         if not value.isalnum():
             raise serializers.ValidationError("El SKU solo debe contener letras y números.")
         return value.upper()
+    
+    def validate_price(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("El precio debe ser un número positivo mayor a cero.")
+        return value
