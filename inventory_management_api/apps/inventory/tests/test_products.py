@@ -8,7 +8,7 @@ def test_create_product(create_test_user):
     new_product = Product.objects.create(
         name = "Taladro",
         sku = "TAL01",
-        price = 1.00,
+        price = 1, # Recieve an Integer and parse it to Decimal
         stock = 10,
         created_by = create_test_user
     )
