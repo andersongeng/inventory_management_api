@@ -22,7 +22,7 @@ class Product(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(db_default=True)
+    active = models.BooleanField(default=True, db_default=True)
 
     def __str__(self):
         return f"{self.name} ({self.sku})"
