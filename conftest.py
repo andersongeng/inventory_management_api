@@ -13,3 +13,10 @@ def api_client():
 def create_test_user(db):
     """Fixture para crear un usuario base rápido"""
     return User.objects.create_user(username="validuser", password="correct_password123")
+
+@pytest.fixture
+def auth_client(create_test_user):
+    """Create an API Client and authenticate automatically with test_user"""
+    client = APIClient()
+    client.force_authenticate(user=create_test_user)
+    return client
