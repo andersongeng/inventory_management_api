@@ -2,6 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.14+-blue.svg)
 ![Django](https://img.shields.io/badge/Django-6.0.2+-092e20.svg)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ed.svg)
 
 Backend for Real-time Stock Control.
 
