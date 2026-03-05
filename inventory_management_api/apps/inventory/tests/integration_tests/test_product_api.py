@@ -2,8 +2,18 @@ import pytest
 from inventory.models import Product
 
 @pytest.mark.django_db
+def test_list_products(auth_client, create_test_user):
+    Product.objects.create(name="P1", sku="SKU1", price=10, created_by=create_test_user)
+    Product.objects.create(name="P2", sku="SKU2", price=20, created_by=create_test_user)
+    
+    response = auth_client.get('/api/products/')
+    
+    assert response.status_code == 200
+    assert len(response.data) >= 2 # Verificamos que al menos hay 2
+
+@pytest.mark.django_db
 def test_create_product_api(auth_client, create_test_user):
-    # 1. Arrange: Frontend data
+    # Arrange: Frontend data
     url = '/api/products/'
     payload = {
         "name": "Sierra Circular",
@@ -11,10 +21,10 @@ def test_create_product_api(auth_client, create_test_user):
         "price": "45.50",
     }
 
-    # 2. Act: Send POST request
+    # Act: Send POST request
     response = auth_client.post(url, payload, format='json')
 
-    # 3. Assert: Verify API response
+    # Assert: Verify API response
     if response.status_code != 201:
         print(f"\nErrores del Serializer: {response.data}")
 
@@ -22,25 +32,53 @@ def test_create_product_api(auth_client, create_test_user):
     assert response.data['name'] == "Sierra Circular"
     assert response.data['created_by'] == create_test_user.id
 
-    # 4. Verify if the new product exists on the database
+    # Verify if the new product exists on the database
     assert Product.objects.filter(sku="SIE001").exists()
 
 @pytest.mark.django_db
 def test_create_duplicate_sku(auth_client):
-    # Create first object
+    # Arrange: Create first object
     Product.objects.create(name="Original", sku="UNIQ123", price=10, stock=5)
     
-    # Try create a second one with the same sku
+    # Arrange: Data to create a second one with the same sku
     payload = {"name": "Copia", "sku": "UNIQ123", "price": 5}
+
+    # Act: Send POST request
     response = auth_client.post('/api/products/', payload)
     
+    # Assert: Verify API response
     assert response.status_code == 400
     assert "sku" in response.data
 
 @pytest.mark.django_db
 def test_negative_price(auth_client):
+    # Arrange: Data to create a new product
     payload = {"name": "Test", "sku": "TEST", "price": -10}
 
+    # Act: Send POST request
     response = auth_client.post('/api/products/', payload)
 
+    # Assert: Verify API response
     assert response.status_code == 400
+
+@pytest.mark.django_db
+def test_update_product_ignores_stock(auth_client, create_test_user):
+    # Arrange: Data to create a product with stock
+    product = Product.objects.create(
+        name="Taladro", sku="TAL01", price=50, stock=10, created_by=create_test_user
+    )
+
+    # Arrange: Define the url to get the created product
+    url = f'/api/products/{product.id}/'
+    
+    # Arrange: Data to update fields of the product
+    payload = {"name": "Taladro Pro", "stock": 999}
+
+    # Act: Send PATCH request
+    response = auth_client.patch(url, payload)
+    
+    # Assert: Verify API response
+    assert response.status_code == 200
+    assert response.data['name'] == "Taladro Pro"
+    # Stock should ignore the new stock value
+    assert response.data['stock'] == 10
