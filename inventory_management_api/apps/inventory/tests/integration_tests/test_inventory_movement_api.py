@@ -66,3 +66,25 @@ def test_movement_requires_positive_quantity(auth_client, create_test_user):
     
     # Assert: Positive integer field or serializer should raise 400
     assert response.status_code == 400
+
+def test_outbound_insufficient_stock(auth_client, create_test_user):
+    """Test do not allow an outbound greater than available stock"""
+
+    # Arrange:
+    product = Product.objects.create(
+        name="iPhone", sku="IPH", price=1000, stock=5, created_by=create_test_user
+    )
+
+    # Arrange: Data to make an OUTBOUND
+    payload = {
+        "product": product.id,
+        "type": "OUT",
+        "quantity": 10  # Try make an OUTBOUND greater than stock available
+    }
+    
+    # Act: Send a POST request
+    response = auth_client.post('/api/inventory_movements/', payload)
+    
+    # Assert: Verify API response
+    assert response.status_code == 400
+    assert "stock" in str(response.data).lower()
