@@ -1,5 +1,5 @@
 import pytest
-from inventory.models import Product
+from inventory.models import Product, Category
 
 @pytest.mark.django_db
 def test_list_products(auth_client, create_test_user):
@@ -111,3 +111,28 @@ def test_delete_product(auth_client, create_test_user):
     # Assert
     assert response.status_code == 204
     assert not Product.objects.filter(id=product.id).exists()
+
+@pytest.mark.django_db
+def test_create_product_with_category(auth_client, create_test_user):
+    # Arrange: Create Category
+    category = Category.objects.create(name="Tools")
+    
+    # Arrange: Data to create a product
+    url = '/api/products/'
+    payload = {
+        "name": "Destornillador",
+        "sku": "DEST01",
+        "price": "5.99",
+        "category": category.id  # Send only ID
+    }
+    
+    # Act: Send POST request
+    response = auth_client.post(url, payload)
+    
+    # Assert: Verify API response
+    assert response.status_code == 201
+    assert response.data['category'] == category.id
+    
+    # Verify DB
+    product = Product.objects.get(sku="DEST01")
+    assert product.category.name == "Tools"
