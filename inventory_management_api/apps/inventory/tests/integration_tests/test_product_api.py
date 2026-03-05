@@ -1,7 +1,8 @@
 import pytest
 from inventory.models import Product, Category
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
 def test_list_products(auth_client, create_test_user):
     # Arrange
     Product.objects.create(name="P1", sku="SKU1", price=10, created_by=create_test_user)
@@ -14,7 +15,6 @@ def test_list_products(auth_client, create_test_user):
     assert response.status_code == 200
     assert len(response.data) >= 2 # Verificamos que al menos hay 2
 
-@pytest.mark.django_db
 def test_create_product_api(auth_client, create_test_user):
     # Arrange: Frontend data
     url = '/api/products/'
@@ -38,7 +38,6 @@ def test_create_product_api(auth_client, create_test_user):
     # Verify if the new product exists on the database
     assert Product.objects.filter(sku="SIE001").exists()
 
-@pytest.mark.django_db
 def test_create_duplicate_sku(auth_client):
     # Arrange: Create first object
     Product.objects.create(name="Original", sku="UNIQ123", price=10, stock=5)
@@ -53,7 +52,6 @@ def test_create_duplicate_sku(auth_client):
     assert response.status_code == 400
     assert "sku" in response.data
 
-@pytest.mark.django_db
 def test_sku_validation_alphanumeric(auth_client):
     # Arrange: Data to create a new product
     payload = {"name": "Producto Malo", "sku": "SKU-@#", "price": 10}
@@ -66,7 +64,6 @@ def test_sku_validation_alphanumeric(auth_client):
     assert "sku" in response.data
     assert "letras y números" in str(response.data['sku'])
 
-@pytest.mark.django_db
 def test_negative_price(auth_client):
     # Arrange: Data to create a new product
     payload = {"name": "Test", "sku": "TEST", "price": -10}
@@ -77,7 +74,6 @@ def test_negative_price(auth_client):
     # Assert: Verify API response
     assert response.status_code == 400
 
-@pytest.mark.django_db
 def test_update_product_ignores_stock(auth_client, create_test_user):
     # Arrange: Data to create a product with stock
     product = Product.objects.create(
@@ -99,7 +95,6 @@ def test_update_product_ignores_stock(auth_client, create_test_user):
     # Stock should ignore the new stock value
     assert response.data['stock'] == 10
 
-@pytest.mark.django_db
 def test_delete_product(auth_client, create_test_user):
     # Arrange
     product = Product.objects.create(name="Borrar", sku="DEL", price=5, created_by=create_test_user)
@@ -112,7 +107,6 @@ def test_delete_product(auth_client, create_test_user):
     assert response.status_code == 204
     assert not Product.objects.filter(id=product.id).exists()
 
-@pytest.mark.django_db
 def test_create_product_with_category(auth_client, create_test_user):
     # Arrange: Create Category
     category = Category.objects.create(name="Tools")
@@ -137,7 +131,6 @@ def test_create_product_with_category(auth_client, create_test_user):
     product = Product.objects.get(sku="DEST01")
     assert product.category.name == "Tools"
 
-@pytest.mark.django_db
 def test_create_product_invalid_category(auth_client):
     url = '/api/products/'
     payload = {
@@ -152,7 +145,6 @@ def test_create_product_invalid_category(auth_client):
     assert response.status_code == 400
     assert "category" in response.data
 
-@pytest.mark.django_db
 def test_product_behavior_on_category_delete(create_test_user):
     # Arrange: Setup manual on BD
     cat = Category.objects.create(name="Temporal")
