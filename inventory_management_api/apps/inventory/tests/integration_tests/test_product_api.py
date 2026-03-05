@@ -51,6 +51,19 @@ def test_create_duplicate_sku(auth_client):
     assert "sku" in response.data
 
 @pytest.mark.django_db
+def test_sku_validation_alphanumeric(auth_client):
+    # Arrange: Data to create a new product
+    payload = {"name": "Producto Malo", "sku": "SKU-@#", "price": 10}
+
+    # Act: Send POST request
+    response = auth_client.post('/api/products/', payload)
+    
+    # Assert: Verify API response
+    assert response.status_code == 400
+    assert "sku" in response.data
+    assert "letras y números" in str(response.data['sku'])
+
+@pytest.mark.django_db
 def test_negative_price(auth_client):
     # Arrange: Data to create a new product
     payload = {"name": "Test", "sku": "TEST", "price": -10}
