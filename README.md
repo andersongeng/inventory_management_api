@@ -1,17 +1,15 @@
-# Inventory management API
+# Inventory Management API v1.0
 
-Backend system to manage your inventory effectively.
+Backend for Real-time Stock Control.
 
 ## Overview
 
-This API is a control environment that helps you to have a complete vision about your products.
+This is a robust RESTful API built with Django & Django Rest Framework (DRF) designed as a control environment that helps you to have a complete vision about your products.
 
-## Core Features
+## Key Features
 
 - Real-time tracking of inbound and outbound inventory movements
-- Full lot traceability across storage locations
 - Monitor real-time stock levels and product availability
-- Intelligent alerts for slow-moving and low-stock products
 
 
 ## Project Structure
@@ -45,10 +43,10 @@ README.md
 requirements.txt
 ```
 
-## Tech Stack
+## Tech Stack & Tools
 
-- Python
-- Django
-- PostgreSQL
-- Git
-- Docker
+- Backend: Python 3.x, Django, Django REST Framework.
+- Database: PostgreSQL
+- Version Control: Git
+- DevOps: Docker & Docker Compose (Containerized DB and App).
+- Documentation: Drf-spectacular (Swagger UI).
