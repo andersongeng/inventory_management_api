@@ -1,6 +1,7 @@
 # Inventory Management API v1.0
 
 ![Python](https://img.shields.io/badge/Python-3.14+-blue.svg)
+![Django](https://img.shields.io/badge/Django-6.0.2+-092e20.svg)
 
 Backend for Real-time Stock Control.
 
