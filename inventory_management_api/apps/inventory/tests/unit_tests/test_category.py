@@ -12,5 +12,5 @@ def test_category_creation():
     assert str(category) == "Construction"
 
 def test_category_verbose_name_plural():
-    # 
+    # Assert: Meta verbose name plural
     assert str(Category._meta.verbose_name_plural) == "Categories"
