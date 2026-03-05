@@ -19,18 +19,35 @@ def test_create_category_success(auth_client):
 
 @pytest.mark.django_db
 def test_create_duplicate_category(auth_client):
-        """Test do not allow duplicate categories"""
+    """Test do not allow duplicate categories"""
 
-        # Arrange: Create a first category
-        Category.objects.create(name="Construcción")
+    # Arrange: Create a first category
+    Category.objects.create(name="Construcción")
 
-        # Arrange: Data to create a second category
-        url = '/api/categories/'
-        payload = {"name": "Construcción"}
+    # Arrange: Data to create a second category
+    url = '/api/categories/'
+    payload = {"name": "Construcción"}
         
-        # Act: Send POST request
-        response = auth_client.post(url, payload)
+    # Act: Send POST request
+    response = auth_client.post(url, payload)
         
-        # Assert: Verify API response
-        assert response.status_code == 400
-        assert "name" in response.data # DRF devuelve error de campo único
+    # Assert: Verify API response
+    assert response.status_code == 400
+    assert "name" in response.data # DRF devuelve error de campo único
+
+def test_list_categories(auth_client):
+    """Test to retrieve all categories created"""
+
+    # Arrange: Create categories
+    Category.objects.create(name="Madera")
+    Category.objects.create(name="Pintura")
+    
+    # Act: Send GET request
+    response = auth_client.get('/api/categories/')
+    
+    # Assert: Verify API response
+    assert response.status_code == 200
+
+    # Use 'results' in case of pagination
+    results = response.data.get('results', response.data)
+    assert len(results) >= 2
