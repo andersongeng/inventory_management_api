@@ -29,12 +29,3 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.sku})"
-    
-    def save(self, *args, **kwargs):
-        if self.pk:  # Si el producto ya existe (estamos editando)
-            # Obtenemos el valor que está grabado en el disco
-            original_stock = Product.objects.get(pk=self.pk).stock
-            if self.stock != original_stock:
-                # Si alguien intentó cambiar el stock a mano, lanzamos error
-                raise ValueError("El stock solo puede modificarse mediante movimientos de inventario.")
-        super().save(*args, **kwargs)
