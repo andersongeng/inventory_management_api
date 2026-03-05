@@ -51,3 +51,21 @@ def test_list_categories(auth_client):
     # Use 'results' in case of pagination
     results = response.data.get('results', response.data)
     assert len(results) >= 2
+
+def test_update_category(auth_client):
+    """Test to update a category"""
+
+    # Arrange:
+    category = Category.objects.create(name="Plomeria")
+
+    # Arrange: Data to update the created category
+    url = f'/api/categories/{category.id}/'
+    payload = {"name": "Plomería Avanzada"}
+    
+    # Act: Send PUT request
+    response = auth_client.put(url, payload)
+    
+    # Assert: Verify API response
+    assert response.status_code == 200
+    category.refresh_from_db()
+    assert category.name == "Plomería Avanzada"
