@@ -207,3 +207,23 @@ LOGGING = {
         },
     },
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Inventory Management API',
+    'DESCRIPTION': (
+        'A professional API for real-time inventory tracking, '
+        'and stock control.'
+    ),
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'CONTACT': {
+        'name': 'Anderson Granado',
+        'url': 'https://www.linkedin.com/in/anderson-granado-b4716a168/',
+        'email': 'andersongeng28@gmail.com',
+    },
+    'LICENSE': {
+        'name': 'MIT License',
+    },
+    'COMPONENT_SPLIT_PATCH': True,
+    'COMPONENT_SPLIT_REQUEST': True,
+}
