@@ -3,11 +3,14 @@ from inventory.models import Product
 
 @pytest.mark.django_db
 def test_list_products(auth_client, create_test_user):
+    # Arrange
     Product.objects.create(name="P1", sku="SKU1", price=10, created_by=create_test_user)
     Product.objects.create(name="P2", sku="SKU2", price=20, created_by=create_test_user)
     
+    # Act
     response = auth_client.get('/api/products/')
     
+    # Assert
     assert response.status_code == 200
     assert len(response.data) >= 2 # Verificamos que al menos hay 2
 
@@ -95,3 +98,16 @@ def test_update_product_ignores_stock(auth_client, create_test_user):
     assert response.data['name'] == "Taladro Pro"
     # Stock should ignore the new stock value
     assert response.data['stock'] == 10
+
+@pytest.mark.django_db
+def test_delete_product(auth_client, create_test_user):
+    # Arrange
+    product = Product.objects.create(name="Borrar", sku="DEL", price=5, created_by=create_test_user)
+    url = f'/api/products/{product.id}/'
+    
+    # Act
+    response = auth_client.delete(url)
+    
+    # Assert
+    assert response.status_code == 204
+    assert not Product.objects.filter(id=product.id).exists()
