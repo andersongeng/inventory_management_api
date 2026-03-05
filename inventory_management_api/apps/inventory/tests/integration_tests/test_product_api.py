@@ -151,3 +151,18 @@ def test_create_product_invalid_category(auth_client):
     
     assert response.status_code == 400
     assert "category" in response.data
+
+@pytest.mark.django_db
+def test_product_behavior_on_category_delete(create_test_user):
+    # Arrange: Setup manual on BD
+    cat = Category.objects.create(name="Temporal")
+    prod = Product.objects.create(
+        name="Clavos", sku="CLV", price=1, category=cat, created_by=create_test_user
+    )
+    
+    # Act: Delete category
+    cat.delete()
+    
+    # Assert: Verify the product was not deleted
+    prod.refresh_from_db()
+    assert prod.category is None
