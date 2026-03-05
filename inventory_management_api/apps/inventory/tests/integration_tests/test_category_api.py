@@ -1,7 +1,8 @@
 import pytest
 from inventory.models.category import Category
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
 def test_create_category_success(auth_client):
     """Test to create a category successfully"""
 
@@ -17,7 +18,6 @@ def test_create_category_success(auth_client):
     assert response.data['name'] == "Electric Tools"
     assert Category.objects.filter(name="Electric Tools").exists()
 
-@pytest.mark.django_db
 def test_create_duplicate_category(auth_client):
     """Test do not allow duplicate categories"""
 
