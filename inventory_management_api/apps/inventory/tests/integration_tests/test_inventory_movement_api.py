@@ -50,3 +50,19 @@ def test_outbound_movement_updates_stock(auth_client, create_test_user):
     assert response.status_code == 201
     product.refresh_from_db()
     assert product.stock == 15  # 20 - 5
+
+def test_movement_requires_positive_quantity(auth_client, create_test_user):
+    """Test do not allow outbounds of 0 or less"""
+    product = Product.objects.create(name="Screw", sku="SCR", price=1, created_by=create_test_user)
+    url = '/api/inventory_movements/'
+    payload = {
+        "product": product.id,
+        "type": "IN",
+        "quantity": 0  # Invalid quantity
+    }
+
+    # Act: Send POST request
+    response = auth_client.post(url, payload)
+    
+    # Assert: Positive integer field or serializer should raise 400
+    assert response.status_code == 400
