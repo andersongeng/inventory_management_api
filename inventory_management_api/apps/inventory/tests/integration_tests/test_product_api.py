@@ -136,3 +136,18 @@ def test_create_product_with_category(auth_client, create_test_user):
     # Verify DB
     product = Product.objects.get(sku="DEST01")
     assert product.category.name == "Tools"
+
+@pytest.mark.django_db
+def test_create_product_invalid_category(auth_client):
+    url = '/api/products/'
+    payload = {
+        "name": "Ghost product",
+        "sku": "GHOST",
+        "price": "10.00",
+        "category": 9999  # ID do not exist
+    }
+    
+    response = auth_client.post(url, payload)
+    
+    assert response.status_code == 400
+    assert "category" in response.data
