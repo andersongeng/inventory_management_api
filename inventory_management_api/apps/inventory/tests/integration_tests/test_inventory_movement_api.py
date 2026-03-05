@@ -1,7 +1,8 @@
 import pytest
 from inventory.models import Product, InventoryMovement
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
 def test_inbound_movement_updates_stock(auth_client, create_test_user):
     """Test to check product stock update by movement"""
     # Arrange: Product with stock 0
