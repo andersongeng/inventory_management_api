@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.db.models.functions import Now
 from .product import Product
 from django.conf import settings
+from django.core.validators import MinValueValidator
 
 class InventoryMovement(models.Model):
     class MovementType(models.TextChoices):
@@ -20,7 +20,7 @@ class InventoryMovement(models.Model):
         related_name='inventory_actions'
     )
     type = models.CharField(max_length=3, choices=MovementType.choices, default=MovementType.INBOUND)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     date = models.DateTimeField(auto_now_add=True)
     comment = models.TextField(null=True, blank=True)
 
